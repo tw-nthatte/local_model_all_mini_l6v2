@@ -1,0 +1,31 @@
+/* Highlight inline footnote links */
+.markdown a[href^="#fn"] {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.markdown a[href^="#fn"]:hover {
+  text-decoration: underline;
+}
+
+/* Style the reference block background */
+.footnotes {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+  background-color: #fafafa;
+  font-size: 0.9rem;
+}
+
+/* Table in footnotes */
+.footnotes table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.footnotes th,
+.footnotes td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+

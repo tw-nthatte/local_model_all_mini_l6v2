@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Directives - {{ app_name }}{% endblock %}
+
+{% block content %}
+<h1>All Directives</h1>
+
+<div class="directives-page">
+    <div class="filters">
+        <input type="text" id="search-box" placeholder="Search directives..." onkeyup="filterTable()">
+    </div>
+
+    <div class="directives-table-container">
+        <table class="directives-table" id="directives-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Relevant</th>
+                    <th>Score</th>
+                    <th>PDF</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for directive in directives %}
+                <tr>
+                    <td>{{ directive.publication_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ directive.title }}</td>
+                    <td>{{ directive.category }}</td>
+                    <td>
+                        {% if directive.is_relevant %}
+                            <span class="badge badge-success">Yes</span>
+                        {% else %}
+                            <span class="badge badge-secondary">No</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ "%.2f"|format(directive.similarity_score or 0) }}</td>
+                    <td>
+                        {% if directive.pdf_downloaded %}
+                            <a href="/download/{{ directive.id }}" class="btn-small">Download</a>
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ directive.url }}" target="_blank" class="btn-small">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    const input = document.getElementById("search-box");
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById("directives-table");
+    const rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const text = row.textContent || row.innerText;
+        row.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - {{ app_name }}{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<div class="settings-page">
+    <div class="settings-card">
+        <h2>Configuration</h2>
+        <div class="setting-item">
+            <label>Scrape Interval (hours)</label>
+            <p>{{ settings.scrape_interval }}</p>
+        </div>
+        <div class="setting-item">
+            <label>Similarity Threshold</label>
+            <p>{{ settings.similarity_threshold }}</p>
+        </div>
+        <div class="setting-item">
+            <label>Email Alerts</label>
+            <p>{% if settings.email_alerts_enabled %}Enabled{% else %}Disabled{% endif %}</p>
+        </div>
+        <div class="setting-item">
+            <label>Database</label>
+            <p style="word-break: break-all;">{{ settings.database }}</p>
+        </div>
+    </div>
+
+    <div class="settings-card">
+        <h2>API Documentation</h2>
+        <p>Visit <a href="/docs">/docs</a> for interactive API documentation.</p>
+        <p>Alternative: <a href="/redoc">/redoc</a></p>
+    </div>
+</div>
+{% endblock %}

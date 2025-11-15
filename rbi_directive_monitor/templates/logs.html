@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Logs - {{ app_name }}{% endblock %}
+
+{% block content %}
+<h1>Scraping Logs</h1>
+
+<div class="logs-page">
+    <div class="logs-table-container">
+        <table class="logs-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>New</th>
+                    <th>Relevant</th>
+                    <th>PDFs</th>
+                    <th>Duration</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr class="log-row log-{{ 'success' if log.success else 'error' }}">
+                    <td>{{ log.scrape_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        <span class="badge {% if log.success %}badge-success{% else %}badge-danger{% endif %}">
+                            {{ 'SUCCESS' if log.success else 'FAILED' }}
+                        </span>
+                    </td>
+                    <td>{{ log.total_directives_found }}</td>
+                    <td>{{ log.new_directives_found }}</td>
+                    <td>{{ log.relevant_directives }}</td>
+                    <td>{{ log.pdfs_downloaded }}</td>
+                    <td>{{ "%.2f"|format(log.duration_seconds or 0) }}s</td>
+                    <td>{{ log.error_message[:50] if log.error_message else '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

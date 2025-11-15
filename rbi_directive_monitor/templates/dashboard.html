@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Dashboard</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Monitored</h3>
+            <p class="stat-value">{{ stats.total_monitored }}</p>
+            <p class="stat-label">directives in system</p>
+        </div>
+        <div class="stat-card">
+            <h3>Relevant Directives</h3>
+            <p class="stat-value">{{ stats.relevant_found }}</p>
+            <p class="stat-label">IT/Digital related</p>
+        </div>
+        <div class="stat-card">
+            <h3>Last Check</h3>
+            <p class="stat-value">{% if stats.last_check %}{{ stats.last_check.strftime('%Y-%m-%d %H:%M') }}{% else %}Never{% endif %}</p>
+            <p class="stat-label status-{{ stats.last_check_status }}">{{ stats.last_check_status }}</p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button onclick="manualScrape()" class="btn btn-primary">Check Now</button>
+        <a href="/api/status" class="btn btn-secondary">API Status</a>
+    </div>
+
+    <h2>Recent Relevant Directives</h2>
+    <div class="directives-table-container">
+        <table class="directives-table">
+            <thead>
+                <tr>
+                    <th>Publication Date</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Score</th>
+                    <th>PDF</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for directive in directives %}
+                <tr>
+                    <td>{{ directive.publication_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ directive.title[:80] }}</td>
+                    <td>{{ directive.category }}</td>
+                    <td><span class="score" data-score="{{ directive.similarity_score }}">{{ "%.2f"|format(directive.similarity_score) }}</span></td>
+                    <td>
+                        {% if directive.pdf_downloaded %}
+                            <a href="/download/{{ directive.id }}" class="btn-small">Download</a>
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ directive.url }}" target="_blank" class="btn-small">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+async function manualScrape() {
+    try {
+        const response = await fetch('/api/manual-scrape', { method: 'POST' });
+        if (response.ok) {
+            alert('Scraping initiated! Check back in a few moments.');
+            setTimeout(() => location.reload(), 3000);
+        } else {
+            alert('Error initiating scrape');
+        }
+    } catch (e) {
+        alert('Error: ' + e.message);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>{{ app_name }}</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="{% if request.url.path == '/' %}active{% endif %}">Dashboard</a></li>
+                <li><a href="/directives" class="{% if '/directives' in request.url.path %}active{% endif %}">Directives</a></li>
+                <li><a href="/logs" class="{% if '/logs' in request.url.path %}active{% endif %}">Logs</a></li>
+                <li><a href="/settings" class="{% if '/settings' in request.url.path %}active{% endif %}">Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 RBI Master Directives Monitor. All rights reserved.</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
